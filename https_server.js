@@ -7,7 +7,7 @@ var https_options = {
     key: key,
     cert: cert
 };
-var PORT = 4200;
+var PORT = process.env.PORT || 4200;
 var HOST = 'localhost';
 app = express();
 app.use(express.static(__dirname + '/public'));
