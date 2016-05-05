@@ -34,7 +34,6 @@
 		};
 		var rtcPeerConn;
 
-		// var socket = io('https://')
 		io = io.connect();
 		io.emit('ready', {"chat_room":ROOM, "signal_room":SIGNAL_ROOM});
 
@@ -96,7 +95,7 @@
 			// get a local stream, show it in our video tag and add it to be sent
 			navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 			navigator.getUserMedia({
-				'audio': false,
+				'audio': true,
 				'video': true
 			}, function(stream) {
 				displaySignalMessage("going to display mt stream...");
