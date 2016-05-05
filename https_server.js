@@ -1,12 +1,12 @@
-var fs = require('fs');
+// var fs = require('fs');
 var express = require('express');
 var https = require('https');
-var key = fs.readFileSync('./key.pem');
-var cert = fs.readFileSync('./cert.pem')
-var https_options = {
-    key: key,
-    cert: cert
-};
+// var key = fs.readFileSync('./key.pem');
+// var cert = fs.readFileSync('./cert.pem')
+// var https_options = {
+//     key: key,
+//     cert: cert
+// };
 var PORT = process.env.PORT || 4200;
 var HOST = 'localhost';
 app = express();
