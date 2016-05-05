@@ -1,5 +1,5 @@
 var fs = require('fs');
-var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
+// var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
 var app = require('express')();
 
 // Add headers
@@ -23,9 +23,9 @@ app.use(function (req, res, next) {
   next();
 });
 
-var server = require('https').createServer(options, app);
-// var server = require('https').createServer(app);
-var io = require('socket.io').listen(server,  {origins:'*:*'});
+// var server = require('https').createServer(options, app);
+var server = require('https').createServer(app);
+var io = require('socket.io').listen(server,  {origins:'metromed-rtc.herokuapp.com'});
 var PORT = process.env.PORT || 4200;
 
 app.get('/', function(req, res) { // При обращении к корневой странице
