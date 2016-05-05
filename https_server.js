@@ -18,8 +18,19 @@ console.log('HTTPS Server listening on %s:%s', HOST, PORT);
 
 // routes
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/dashboard.html');
+	res.sendFile(__dirname + '/dashboard.html');
 });
-app.post('/ho', function(req, res) {
-    res.send('HO!');
+app.get('/env', function(req, res) {
+	var keys = Object.keys(process.env).map(function(keyName, i, arr) {
+		return (
+			'<style>li:nth-child(even) {background:red}</style>' +
+			'<li>' + 
+				keyName + ': ' + arr[keyName]
+			+ '</li>'
+		);
+	});
+	res.send(
+		'<h1>Process Environment</h1>' +
+		'<ul>' + keys + '</ul>'
+	);
 });
