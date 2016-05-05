@@ -1,36 +1,68 @@
-// var fs = require('fs');
 var express = require('express');
-var https = require('http');
-// var key = fs.readFileSync('./key.pem');
-// var cert = fs.readFileSync('./cert.pem')
-// var https_options = {
-//     key: key,
-//     cert: cert
-// };
-var PORT = process.env.PORT || 4200;
-var HOST = 'localhost';
 app = express();
 app.use(express.static(__dirname + '/public'));
-
-server = https.createServer(app).listen(PORT);
+var fs = require('fs');
+var options = {
+	key:  fs.readFileSync('./key.pem'),
+	cert: fs.readFileSync('./cert.pem')
+};
+var https = require('https');
+var HOST = 'localhost';
+var PORT = process.env.PORT || 4200;
+var server = https.createServer(options, app).listen(PORT);
 console.log('HTTPS Server listening on %s:%s', HOST, PORT);
-
 
 // routes
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/dashboard.html');
 });
+app.get('/envraw', function(req, res) {
+	res.send(process.env);
+});
 app.get('/env', function(req, res) {
-	var keys = Object.keys(process.env).map(function(keyName, i, arr) {
-		return (
-			'<style>li:nth-child(even) {background:red}</style>' +
-			'<li>' + 
-				keyName + ': ' + arr[keyName]
-			+ '</li>'
-		);
+	var keys = Object.keys(process.env).map(function(keyName) {
+		return ('<li>'+ keyName +': '+ process.env[keyName] +'</li>');
 	});
 	res.send(
+		'<style>li:nth-child(even) {background:#eee}</style>' +
 		'<h1>Process Environment</h1>' +
 		'<ul>' + keys + '</ul>'
 	);
+});
+app.get('/env2', function(req, res) {
+	res.processEnv = process.env;
+	res.sendFile(__dirname + '/env2.html');
+});
+
+// web-sockets
+var io = require('socket.io').listen(server);
+io.sockets.on('connection', function(socket) { // При подключении
+	// отправим сообщение
+	socket.emit('server event', { event: 'server' });
+	// и объявим обработчик события при поступлении сообщения от клиента.
+	socket.on('client event', function(data) {
+		console.log('timer: '+Date.now()+', ', data);
+	});
+	// При получении сообщения 'offer',
+	socket.on('offer', function(data) { // т.к. клиентское соединение одно,
+		// отправим сообщение обратно через тот же сокет
+		socket.emit('offer', data);
+		// Если необходимо переслать сообщение по всем соединениям, кроме отправителя:
+		// socket.broadcast.emit('offer', data);
+	});
+	socket.on('answer', function(data) {
+		socket.emit('answer', data);
+	});
+	socket.on('ice1', function(data) {
+		socket.emit('ice1', data);
+	});
+	socket.on('ice2', function(data) {
+		socket.emit('ice2', data);
+	});
+	socket.on('hangup', function(data) {
+		socket.emit('hangup', data);
+	});
+	socket.on('disconnect', function() {
+		console.log('user disconnected');
+	});
 });
