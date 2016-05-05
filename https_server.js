@@ -12,7 +12,7 @@ var HOST = 'localhost';
 app = express();
 app.use(express.static(__dirname + '/public'));
 
-server = https.createServer(https_options, app).listen(PORT, HOST);
+server = https.createServer(https_options, app).listen(PORT);
 console.log('HTTPS Server listening on %s:%s', HOST, PORT);
 
 
