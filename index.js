@@ -1,6 +1,13 @@
+/**
+ * Metromed-RTC ExpressJS Socket.IO Server
+ */
+
+'use strict';
+
 var fs = require('fs');
-// var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
-var app = require('express')();
+var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
+var express = require('express');
+var app = express();
 
 var origins = 'https://localhost:3000';
 
@@ -21,13 +28,15 @@ var origins = 'https://localhost:3000';
 //   next();
 // });
 
-// var server = require('https').createServer(options, app);
-var server = require('https').createServer(app);
+var server = require('https').createServer(options, app);
+// var server = require('https').createServer(app);
 var io = require('socket.io').listen(server,  {origins:origins});
 var PORT = process.env.PORT || 4200;
 
+app.use(express.static(__dirname + '/public'));
+
 app.get('/', function(req, res) { // При обращении к корневой странице
-	res.sendFile(__dirname + '/index.html'); // отдадим HTML-файл.
+	res.sendFile(__dirname + '/dashboard.html'); // отдадим HTML-файл.
 });
 
 io.sockets.on('connection', function(socket) { // При подключении
@@ -61,6 +70,13 @@ io.sockets.on('connection', function(socket) { // При подключении
 	});
 });
 
-server.listen(PORT, function() {
-	console.log('server listening on port ' + PORT);
+// server.listen(PORT, function() {
+// 	console.log('server listening on port ' + PORT);
+// });
+
+// Server
+// server.listen(process.env.PORT || 3000, 'localhost');
+server.listen(process.env.PORT || 4200);
+server.on('listening', function() {
+	console.log('Express server started on port %s at %s', server.address().port, server.address().address);
 });
