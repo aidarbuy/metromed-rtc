@@ -5,7 +5,8 @@ var options = {
 };
 var express = require('express');
 var app = express();
-var server = require('https').createServer(options, app);
+// var server = require('https').createServer(options, app);
+var server = require('https').createServer(app);
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res) {
