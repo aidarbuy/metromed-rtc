@@ -1,18 +1,16 @@
 var fs = require('fs');
-// var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
+var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
 var app = require('express')();
-var server = require('https').createServer(app);
-var io = require('socket.io').listen(server);
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+  next();
+});
+var server = require('https').createServer(options, app);
+var io = require('socket.io').listen(server,  {origins:'*:*'});
 var PORT = process.env.PORT || 4200;
-
-io.set("origins = *");
-io.set('transports', [
-    'websocket'
-    , 'flashsocket'
-    , 'htmlfile'
-    , 'xhr-polling'
-    , 'jsonp-polling'
-]);
 
 app.get('/', function(req, res) { // При обращении к корневой странице
 	res.sendFile(__dirname + '/index.html'); // отдадим HTML-файл.
