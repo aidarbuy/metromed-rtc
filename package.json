@@ -1,15 +1,9 @@
 {
   "name": "Metromed-RTC",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "ejs": "2.x",
-    "express": "4.x",
-    "express.io": "1.x",
+    "express": "^4.13.4",
     "socket.io": "^1.4.6"
-  },
-  "devDependencies": {
-    "coffee-script": "^1.10.0",
-    "connect": "^3.4.1"
   }
 }
