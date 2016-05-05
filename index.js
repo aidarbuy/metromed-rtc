@@ -5,6 +5,15 @@ var server = require('https').createServer(app);
 var io = require('socket.io').listen(server);
 var PORT = process.env.PORT || 4200;
 
+io.set("origins = *");
+io.set('transports', [
+    'websocket'
+    , 'flashsocket'
+    , 'htmlfile'
+    , 'xhr-polling'
+    , 'jsonp-polling'
+]);
+
 app.get('/', function(req, res) { // При обращении к корневой странице
 	res.sendFile(__dirname + '/index.html'); // отдадим HTML-файл.
 });
