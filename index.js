@@ -1,5 +1,5 @@
 var fs = require('fs');
-var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
+// var options = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') };
 var app = require('express')();
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -8,7 +8,8 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
   next();
 });
-var server = require('https').createServer(options, app);
+// var server = require('https').createServer(options, app);
+var server = require('https').createServer(app);
 var io = require('socket.io').listen(server,  {origins:'*:*'});
 var PORT = process.env.PORT || 4200;
 
