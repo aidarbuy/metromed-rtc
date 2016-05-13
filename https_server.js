@@ -6,33 +6,16 @@ var options = {
 	key:  fs.readFileSync('./key.pem'),
 	cert: fs.readFileSync('./cert.pem')
 };
-var https = require('http');
+var https = require('https');
 var HOST = 'localhost';
 var PORT = process.env.PORT || 4200;
-// var server = https.createServer(options, app).listen(PORT);
-var server = https.createServer(app).listen(PORT);
+var server = https.createServer(options, app).listen(PORT);
+// var server = https.createServer(app).listen(PORT);
 console.log('HTTPS Server listening on %s:%s', HOST, PORT);
 
 // routes
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/dashboard.html');
-});
-app.get('/envraw', function(req, res) {
-	res.send(process.env);
-});
-app.get('/env', function(req, res) {
-	var keys = Object.keys(process.env).map(function(keyName) {
-		return ('<li>'+ keyName +': '+ process.env[keyName] +'</li>');
-	});
-	res.send(
-		'<style>li:nth-child(even) {background:#eee}</style>' +
-		'<h1>Process Environment</h1>' +
-		'<ul>' + keys + '</ul>'
-	);
-});
-app.get('/env2', function(req, res) {
-	res.processEnv = process.env;
-	res.sendFile(__dirname + '/env2.html');
 });
 
 // web-sockets
@@ -44,12 +27,12 @@ io.sockets.on('connection', function(socket) { // При подключении
 	socket.on('client event', function(data) {
 		console.log('timer: '+Date.now()+', ', data);
 	});
-	// При получении сообщения 'offer',
+	// При получении сообщения 'offer':
 	socket.on('offer', function(data) { // т.к. клиентское соединение одно,
 		// отправим сообщение обратно через тот же сокет
-		socket.emit('offer', data);
+		// socket.emit('offer', data);
 		// Если необходимо переслать сообщение по всем соединениям, кроме отправителя:
-		// socket.broadcast.emit('offer', data);
+		socket.broadcast.emit('offer', data);
 	});
 	socket.on('answer', function(data) {
 		socket.emit('answer', data);
