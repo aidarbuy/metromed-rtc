@@ -9,8 +9,8 @@ var options = {
 var https = require('https');
 var HOST = 'localhost';
 var PORT = process.env.PORT || 4200;
-var server = https.createServer(options, app).listen(PORT);
-// var server = https.createServer(app).listen(PORT);
+// var server = https.createServer(options, app).listen(PORT);
+var server = https.createServer(app).listen(PORT);
 console.log('HTTPS Server listening on %s:%s', HOST, PORT);
 
 // routes
